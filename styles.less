@@ -1,0 +1,73 @@
+.stepper-controls {
+    position: relative;
+    margin-top: var(--bs-spacer-4);
+    margin-bottom: calc(var(--bs-spacer-4) - 4px);
+
+    .progress {
+        height: 4px;
+        transform: translate(0%, -50%);
+
+        .progress-bar {
+            width: 0%;
+            transition: all 500ms ease;
+        }
+    }
+
+    .stepper-controls-mobile {
+        transition: all 500ms ease;
+    }
+
+    .stepper-controls-list {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .control-item {
+            min-width: var(--bs-spacer-5);
+            height: var(--bs-spacer-5);
+            transition: all 500ms ease;
+
+            &:not([class*="btn-"]) {
+                --bs-btn-bg: var(--bs-tertiary-bg);
+                --bs-btn-border-color: var(--bs-border-color);
+                --bs-btn-hover-bg: var(--bs-secondary-bg);
+                --bs-btn-hover-border-color: var(--bs-border-color);
+
+                &:hover {
+                    --bs-btn-bg: var(--bs-secondary-bg);
+                }
+            }
+
+            &.active {
+                &:not([class*="btn-"]) {
+                    --bs-btn-color: var(--bs-body-bg);
+                    --bs-btn-bg: var(--bs-link-color);
+                    --bs-btn-border-color: var(--bs-link-color);
+                    --bs-btn-hover-color:  var(--bs-body-bg);
+                    --bs-btn-hover-bg: var(--bs-link-hover-color);
+                    --bs-btn-hover-border-color: var(--bs-link-hover-color);
+                    --bs-btn-active-color: var(--bs-body-bg);
+                    --bs-btn-active-bg: var(--bs-link-color);
+                    --bs-btn-active-border-color: var(--bs-link-color);
+                    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+                }
+            }
+        }
+    }
+}
+.stepper-pagination {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 992px) {
+    .stepper-controls {
+        position: relative;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
