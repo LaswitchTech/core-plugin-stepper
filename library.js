@@ -362,7 +362,7 @@ builder.add('components','stepper', class extends builder.ComponentClass {
 
         // Check if Stepper contains a single step
         if(this._counter > 1 && this._component.pagination.next.attr('disabled') === 'disabled'){
-            this._component.pagination.next.attr('disabled',false).attr('data-bs-target','#' + self._component.steps.id + '2');
+            this._component.pagination.next.attr('disabled',false).attr('data-bs-target','#' + self._component.id + 'controlsstep' + step.id + 'content');
         }
 
         // Execute Callback
