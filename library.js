@@ -399,7 +399,7 @@ builder.add('components','stepper', class extends builder.ComponentClass {
             // Set Progress Bar Width
             let width = 0;
             if(self._counter > 1){
-                width = (((parseInt(step.id) - 1) / (self._counter - 1)) * 100).toFixed(2);
+                width = (((parseInt(step.id) - 1) / (self._counter - 1)) * 100);
             }
             if(self._component.progress.find('.progress-bar').length > 1){
 
@@ -407,7 +407,7 @@ builder.add('components','stepper', class extends builder.ComponentClass {
                 self._component.progress.find('.progress-bar:not(.stepper-progress)').each(function(index, element) {
                     const $el = $(this);
                     const pct = ($el.outerWidth() / $el.parent().width()) * 100;
-                    width = (width - pct.toFixed(2));
+                    width = (width - pct);
                 });
             }
             self._component.progress.bar.css('width',width.toFixed(2) + '%');
