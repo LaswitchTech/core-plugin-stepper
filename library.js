@@ -374,6 +374,20 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         return this;
     }
 
+    next(){
+        if(this._component.pagination.next.attr('disabled') !== 'disabled'){
+            this._component.pagination.next.trigger('click');
+        }
+        return this;
+    }
+
+    previous(){
+        if(this._component.pagination.previous.attr('disabled') !== 'disabled'){
+            this._component.pagination.previous.trigger('click');
+        }
+        return this;
+    }
+
     #calc(step){
 
         // Set Self
