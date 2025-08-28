@@ -10,6 +10,8 @@ builder.add('components','stepper', class extends builder.ComponentClass {
                 controls: null,
                 controlsList: null,
                 control: null,
+                mobile: null,
+                content: null,
                 steps: null,
                 pagination: null,
             },
@@ -133,11 +135,16 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         });
 
         let properties = {
-            class: {},
+            class: {
+                control: null,
+                mobile: null,
+                content: null,
+            },
             label: null,
             icon: null,
             color: null,
             tooltip: null,
+            numbered: false,
             callback: {
                 hide: null,
                 hidden: null,
@@ -187,7 +194,7 @@ builder.add('components','stepper', class extends builder.ComponentClass {
             'data-bs-target':'#' + this._component.controls.id + 'step' + id+'content',
             'aria-controls':this._component.controls.id + 'step' + id+'content',
             'aria-expanded':'false',
-        }).text(id).appendTo(this._component.controls.list);
+        }).appendTo(this._component.controls.list);
         control.id = control.attr('id');
 
         // Create Mobile Tab Nav
@@ -207,7 +214,15 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         // Set Control Class
         if(this._properties.class.control){
             control.addClass(this._properties.class.control);
-            control.mobile.btn.addClass(this._properties.class.control);
+        }
+        if(properties.class.control){
+            control.addClass(properties.class.control);
+        }
+        if(this._properties.class.mobile){
+            control.mobile.btn.addClass(this._properties.class.mobile);
+        }
+        if(properties.class.mobile){
+            control.mobile.btn.addClass(properties.class.mobile);
         }
 
         // Set Tooltip
@@ -223,6 +238,12 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         if(properties.color){
             control.addClass('btn-'+properties.color);
             control.mobile.btn.addClass('btn-'+properties.color);
+        }
+
+        // Set Numbered
+        if(properties.numbered){
+            control.text(id);
+            control.mobile.label.text(id);
         }
 
         // Set Label
@@ -250,6 +271,14 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         }).appendTo(this._component.steps.accordion);
         content.id = content.attr('id');
         content.bootstrap = new bootstrap.Collapse(content,{toggle:false});
+
+        // Set Content Class
+        if(this._properties.class.content){
+            content.addClass(this._properties.class.content);
+        }
+        if(properties.class.content){
+            content.addClass(properties.class.content);
+        }
 
         // Set Step
         const step = {content:content,control:control,properties:properties,id:id};
