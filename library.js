@@ -1,6 +1,8 @@
 builder.add('components','stepper', class extends builder.ComponentClass {
 
     #current = 1;
+    #isAnimating = false;
+    #pendingTarget = null;
     _steps = {};
 
     _init(){
@@ -113,6 +115,9 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         if(this._properties.class.pagination){
             this._component.pagination.addClass(this._properties.class.pagination);
         }
+
+        // Wire Sequential Accordion Behavior
+        setTimeout(() => this.#wireSequentialAccordion(), 100);
     }
 
     add(param1 = null, param2 = null){
@@ -336,7 +341,7 @@ builder.add('components','stepper', class extends builder.ComponentClass {
                 if(id <= step.id){
                     self._steps[id].control.addClass('active');
                 }
-                if(id !== step.id){
+                if(id !== step.id && self._steps[id].content.hasClass('show')){
                     self._steps[id].content.bootstrap.hide();
                     self._steps[id].control.attr('aria-expanded',false);
                 } else {
@@ -388,6 +393,14 @@ builder.add('components','stepper', class extends builder.ComponentClass {
         return this;
     }
 
+    controls(){
+        return this._component.controls;
+    }
+
+    pagination(){
+        return this._component.pagination;
+    }
+
     #calc(step){
 
         // Set Self
@@ -412,5 +425,51 @@ builder.add('components','stepper', class extends builder.ComponentClass {
             }
             self._component.progress.bar.css('width',width.toFixed(2) + '%');
         }, 300);
+    }
+
+    #wireSequentialAccordion() {
+        const accEl = this._component?.steps?.accordion?.get(0);
+        if (!accEl) return;
+
+        // Delegate clicks from any toggle inside this component (controls, mobile, pagination)
+        this._component.on('click', '[data-bs-toggle="collapse"]', (e) => {
+            const btn = e.currentTarget;
+            const targetSel = btn.getAttribute('data-bs-target') || btn.getAttribute('href');
+            if (!targetSel) return;
+
+            const targetEl = document.querySelector(targetSel);
+            if (!targetEl || !accEl.contains(targetEl)) return; // ignore toggles outside our accordion
+
+            const openEl = accEl.querySelector('.accordion-collapse.show');
+
+            // If a transition is in progress, queue the last request
+            if (this.#isAnimating) {
+                e.preventDefault();
+                this.#pendingTarget = targetSel;
+                return;
+            }
+
+            // If switching from one open panel to another, close first, then open next
+            if (openEl && openEl !== targetEl) {
+                e.preventDefault();
+                this.#isAnimating = true;
+                this.#pendingTarget = targetSel;
+
+                const inst = bootstrap.Collapse.getOrCreateInstance(openEl);
+                const onHidden = () => {
+                    openEl.removeEventListener('hidden.bs.collapse', onHidden);
+                    const nextEl = document.querySelector(this.#pendingTarget);
+                    this.#pendingTarget = null;
+
+                    if (nextEl) {
+                        const nextInst = bootstrap.Collapse.getOrCreateInstance(nextEl);
+                        nextInst.show();
+                    }
+                    this.#isAnimating = false;
+                };
+                openEl.addEventListener('hidden.bs.collapse', onHidden, { once: true });
+                inst.hide();
+            }
+        });
     }
 });
